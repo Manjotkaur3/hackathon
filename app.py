@@ -495,7 +495,7 @@ def main():
             for dept, perf in zip(departments, performance):
                 dept_info = KMRL_DEPARTMENTS[dept]
                 st.markdown(f"""
-                <div style="background: white; padding: 1rem; border-radius: 10px; margin: 0.5rem 0; border-left: 4px solid {dept_info['color']}">
+                <div style="background: black; padding: 1rem; border-radius: 10px; margin: 0.5rem 0; border-left: 4px solid {dept_info['color']}">
                     <h4>{dept_info['icon']} {dept_info['name'].split()[-1]}</h4>
                     <div style="background: #f0f0f0; border-radius: 5px; height: 10px; margin: 5px 0;">
                         <div style="background: {dept_info['color']}; width: {perf}%; height: 100%; border-radius: 5px;"></div>
