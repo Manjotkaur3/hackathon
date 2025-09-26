@@ -397,7 +397,7 @@ def main():
                             st.error("❌ Text extraction failed. Please try another file.")
         
         with col2:
-            st.markdown("### 🎤 Voice Input")
+            st.markdown("### 🎤 Metro Sahayak")
             st.info("Speak your query or document content")
             
             voice_input = mic_recorder(
