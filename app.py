@@ -32,7 +32,11 @@ OPENAI_API_KEY, OCR_API_KEY = get_api_keys()
 def inject_custom_css():
     st.markdown("""
     <style>
-    /* Main styling */
+    /* Main styling with better contrast */
+    .main {
+        background-color: #f8f9fa;
+    }
+    
     .main-header {
         background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         padding: 2rem;
@@ -44,12 +48,13 @@ def inject_custom_css():
     }
     
     .department-card {
-        background: white;
+        background: #ffffff;
         padding: 1.5rem;
         border-radius: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         border-left: 4px solid #1e3c72;
         margin: 0.5rem 0;
+        color: #333333;
     }
     
     .metric-card {
@@ -61,10 +66,90 @@ def inject_custom_css():
         margin: 0.5rem 0;
     }
     
-    .priority-critical { border-left: 4px solid #ff4757; }
-    .priority-high { border-left: 4px solid #ffa502; }
-    .priority-medium { border-left: 4px solid #2ed573; }
-    .priority-low { border-left: 4px solid #747d8c; }
+    .priority-critical { 
+        border-left: 4px solid #ff4757;
+        background: #fff5f5 !important;
+        color: #333333 !important;
+    }
+    .priority-high { 
+        border-left: 4px solid #ffa502;
+        background: #fff9e6 !important;
+        color: #333333 !important;
+    }
+    .priority-medium { 
+        border-left: 4px solid #2ed573;
+        background: #f0fff4 !important;
+        color: #333333 !important;
+    }
+    .priority-low { 
+        border-left: 4px solid #747d8c;
+        background: #f8f9fa !important;
+        color: #333333 !important;
+    }
+    
+    /* Improve text contrast throughout the app */
+    .stApp {
+        background-color: #f8f9fa;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: #ffffff;
+        color: #333333;
+        border-radius: 4px 4px 0 0;
+        padding: 10px 16px;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: #1e3c72;
+        color: white;
+    }
+    
+    /* Better contrast for text areas and inputs */
+    .stTextArea textarea, .stTextInput input {
+        background-color: #ffffff !important;
+        color: #333333 !important;
+    }
+    
+    /* Improve card text readability */
+    .department-card h3, .department-card p, .department-card strong {
+        color: #333333 !important;
+    }
+    
+    /* File uploader styling with better contrast */
+    .uploadedFile {
+        border: 2px dashed #1e3c72;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        margin: 10px 0;
+        background-color: #ffffff;
+        color: #333333;
+    }
+    
+    /* Improve sidebar contrast */
+    .css-1d391kg {
+        background-color: #ffffff;
+    }
+    
+    .sidebar .sidebar-content {
+        background-color: #ffffff;
+    }
+    
+    /* Better contrast for expanders */
+    .streamlit-expanderHeader {
+        background-color: #ffffff;
+        color: #333333;
+    }
+    
+    /* Improve JSON display contrast */
+    .stJson {
+        background-color: #ffffff !important;
+    }
+    
+    /* Chart container improvements */
+    .js-plotly-plot {
+        background-color: #ffffff;
+    }
     
     /* Button styling */
     .stButton>button {
@@ -85,26 +170,29 @@ def inject_custom_css():
     .stTabs [data-baseweb="tab-list"] {
         gap: 2px;
     }
-    
-    .stTabs [data-baseweb="tab"] {
-        background: #f0f2f6;
-        border-radius: 4px 4px 0 0;
-        padding: 10px 16px;
+
+    /* Ensure all text has good contrast */
+    .stMarkdown, .stText, .stAlert, .stInfo, .stSuccess, .stWarning, .stError {
+        color: #333333 !important;
     }
     
-    .stTabs [aria-selected="true"] {
-        background: #1e3c72;
-        color: white;
+    /* Improve data frame contrast */
+    .dataframe {
+        background-color: #ffffff !important;
+        color: #333333 !important;
     }
     
-    /* File uploader styling */
-    .uploadedFile {
-        border: 2px dashed #1e3c72;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        margin: 10px 0;
+    /* Better contrast for select boxes */
+    .stSelectbox div {
+        background-color: #ffffff !important;
+        color: #333333 !important;
     }
+    
+    .stSelectbox option {
+        background-color: #ffffff !important;
+        color: #333333 !important;
+    }
+    
     </style>
     """, unsafe_allow_html=True)
 
@@ -315,7 +403,13 @@ def create_performance_chart():
     fig = px.line(data, x='date', y=list(KMRL_DEPARTMENTS.keys()),
                   title='Department Performance Trends (Last 30 Days)',
                   labels={'value': 'Cases Handled', 'variable': 'Department'})
-    fig.update_layout(height=300, showlegend=True)
+    fig.update_layout(
+        height=300, 
+        showlegend=True,
+        plot_bgcolor='white',
+        paper_bgcolor='white',
+        font=dict(color='#333333')
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 # ===============================
@@ -461,6 +555,11 @@ def main():
                     </div>
                     """, unsafe_allow_html=True)
                     
+                    # Summary text
+                    if "summary" in result:
+                        st.markdown("### 📝 Summary")
+                        st.info(result["summary"])
+                    
                     # Audio playback
                     audio_b64 = text_to_audio_base64(result.get("summary",""), lang=chosen_lang)
                     if audio_b64:
@@ -468,7 +567,7 @@ def main():
                         st.audio(base64.b64decode(audio_b64), format="audio/mp3")
                 
                 with col2:
-                    st.markdown("### 📝 Detailed Analysis")
+                    st.markdown("### 📋 Detailed Analysis")
                     st.json(result, expanded=True)
         
         else:
@@ -495,12 +594,12 @@ def main():
             for dept, perf in zip(departments, performance):
                 dept_info = KMRL_DEPARTMENTS[dept]
                 st.markdown(f"""
-                <div style="background: black; padding: 1rem; border-radius: 10px; margin: 0.5rem 0; border-left: 4px solid {dept_info['color']}">
-                    <h4>{dept_info['icon']} {dept_info['name'].split()[-1]}</h4>
+                <div style="background: #ffffff; padding: 1rem; border-radius: 10px; margin: 0.5rem 0; border-left: 4px solid {dept_info['color']}; color: #333333;">
+                    <h4 style="color: #333333;">{dept_info['icon']} {dept_info['name'].split()[-1]}</h4>
                     <div style="background: #f0f0f0; border-radius: 5px; height: 10px; margin: 5px 0;">
                         <div style="background: {dept_info['color']}; width: {perf}%; height: 100%; border-radius: 5px;"></div>
                     </div>
-                    <p style="text-align: right; margin: 0;">{perf}%</p>
+                    <p style="text-align: right; margin: 0; color: #333333;">{perf}%</p>
                 </div>
                 """, unsafe_allow_html=True)
     
