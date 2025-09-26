@@ -1,1 +1,8 @@
-
+streamlit>=1.22
+requests
+PyPDF2
+python-docx
+gtts
+plotly
+pandas
+streamlit-mic-recorder
